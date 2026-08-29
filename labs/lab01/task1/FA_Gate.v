@@ -16,10 +16,13 @@ module FA_Gate(
 );
   wire ps, pc1, pc2;
 
-  xor (ps,  a,   b);
-  and (pc1, a,   b);
-  xor (sum, cin, ps);
-  and (pc2, cin, ps);
-  or  (cout, pc1, pc2);
+  // Part (b): gates reordered (or -> top, xors swapped) -- same results prove
+  //           that Verilog gate statements are concurrent, not sequential.
+  // Part (c): #(2) delay added to every gate.
+  or  #(2) (cout, pc1, pc2);
+  and #(2) (pc2, cin, ps);
+  xor #(2) (sum, cin, ps);
+  and #(2) (pc1, a,   b);
+  xor #(2) (ps,  a,   b);
 
 endmodule
